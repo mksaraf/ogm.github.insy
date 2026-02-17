@@ -1,2 +1,4 @@
-.venv-insy2
-.venv-insy2/*
+.venv/*
+.venv
+.streamlit/
+.env
