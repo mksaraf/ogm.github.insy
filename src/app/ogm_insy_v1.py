@@ -101,40 +101,39 @@ question = st.chat_input("Hi I am Insy! How can I help you?")
 if question:
     vectordb = st.session_state.get("vectordb", None)
     if not vectordb:
-        st.error("You need to provide a PDF")
+        st.error("Vector database not initialized. Please check your configuration.")
         st.stop()
 
+    # Get relevant context from vector database
     search_results = vectordb.similarity_search(question, k=5)
-    pdf_extract = "\n ".join([result.page_content for result in search_results])
+    context = "\n".join([result.page_content for result in search_results])
 
-    prompt[0] = {
-        "role": "system",
-        "content": prompt_template.format(pdf_extract=pdf_extract),
-    }
+    # Create enhanced prompt with context
+    enhanced_prompt = f"{prompt_template}\n\nContext from knowledge base:\n{context}\n\nUser question: {question}"
 
+    # Add user message to chat
     prompt.append({"role": "user", "content": question})
 
     with st.chat_message("user"):
         st.write(question)
 
     with st.chat_message("assistant"):
-        botmsg = st.empty()  
+        botmsg = st.empty()
 
-    # response = []
-    #response = agent(search_results, prompt)
-    response = list(agent(search_results, prompt).values())
-    result = ""
-    for chunk in Client.chat.completions.create(
-        model="gpt-3.5-turbo", messages=prompt, stream=True
-    ):
-        text = chunk.choices[0].delta.content
-        if text is not None:
-            response.append(text)
-            result = "".join(response).strip()
+    try:
+        # Use the agent to get response with enhanced context
+        agent_response = agent.run(enhanced_prompt)
 
-            botmsg.write(result)
+        # Display the response
+        botmsg.write(agent_response)
 
-    prompt.append({"role": "assistant", "content": result})
+        # Add assistant response to chat history
+        prompt.append({"role": "assistant", "content": agent_response})
+
+    except Exception as e:
+        error_msg = f"Sorry, I encountered an error: {str(e)}"
+        botmsg.write(error_msg)
+        prompt.append({"role": "assistant", "content": error_msg})
 
     st.session_state["prompt"] = prompt
 

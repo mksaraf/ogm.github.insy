@@ -1,15 +1,11 @@
 from langchain.agents import Tool
-from steps.step9_retrieval.retrievalQA import retrievalQA
 
 def agentTools(retrieval_qa):
     tools = [Tool(
             name='Knowledge Base',
-            func=retrieval_qa.invoke,
+            func=retrieval_qa.run,
             description=(
                 'use this tool when answering general knowledge queries to get '
-                'more information about the topic'
+                'more information about the topic from the knowledge base'
             ))]
     return tools
-
-# Call the function and assign the returned value to a variable
-#agent_tools = agentTools(retrieval_qa)

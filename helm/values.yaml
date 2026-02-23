@@ -1,0 +1,58 @@
+# Default values for ogm-insy.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Override the name of the chart
+nameOverride: ""
+# -- Override the full name of the chart
+fullnameOverride: ""
+
+image:
+  repository: ghcr.io/mksaraf/ogm-insy
+  tag: latest
+  pullPolicy: IfNotPresent
+  # -- Optionally specify an array of imagePullSecrets
+  # pullSecrets: []
+
+service:
+  type: ClusterIP
+  port: 8501
+  annotations: {}
+
+deployment:
+  replicas: 1
+  annotations: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+  # -- Automount service account token for the service account
+  automount: true
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+  requests:
+    cpu: 500m
+    memory: 512Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

@@ -1,0 +1,56 @@
+# Sample values.yaml for OGM.Insy Helm deployment on Hostinger KVM
+# Adjust these values based on your KVM plan resources
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/yourusername/ogm-insy
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8501
+
+ingress:
+  enabled: true
+  className: "nginx"
+  hosts:
+    - host: ogm-insy.yourdomain.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+  #  - secretName: ogm-insy-tls
+  #    hosts:
+  #      - ogm-insy.yourdomain.com
+
+persistence:
+  enabled: true
+  existingClaim: ogm-insy-data
+  # size: 50Gi  # Adjust based on your KVM storage
+
+resources:
+  limits:
+    cpu: 2  # Adjust for KVM2/4/8
+    memory: 4Gi
+  requests:
+    cpu: 500m
+    memory: 1Gi
+
+# For Hostinger KVM, you might want to disable some resource-intensive features
+env:
+  - name: STREAMLIT_SERVER_MAX_UPLOAD_SIZE
+    value: "50"  # MB
+  - name: STREAMLIT_SERVER_ENABLE_CORS
+    value: "false"
+  - name: PYTHONUNBUFFERED
+    value: "1"
+
+# Node selector for your KVM node
+nodeSelector:
+  kubernetes.io/os: linux
+
+tolerations: []
+
+affinity: {}
