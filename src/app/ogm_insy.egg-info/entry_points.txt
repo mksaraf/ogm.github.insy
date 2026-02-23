@@ -1,0 +1,2 @@
+[console_scripts]
+ogm-insy = ogm_insy_v1:main
