@@ -1112,6 +1112,12 @@ For direct command-line publishing to GitHub Container Registry:
 2. Push the chart:
    ```bash
    helm push dist/ogm-insy-0.1.0.tgz oci://ghcr.io/mksaraf/charts/
+
+   GitHub Packages: 
+    - Visit https://github.com/mksaraf?tab=packages
+    - Look for the charts package in the list: 
+        - charts/ogm-insy
+    - https://github.com/mksaraf/ogm.github.insy/pkgs/container/charts%2Fogm-insy
    ```
 
 3. Users can install directly from GHCR:
